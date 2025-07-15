@@ -31,15 +31,13 @@ public class UsuarioService {
      * ou um Optional vazio caso contrário.
      */
     public Optional<Usuario> autenticar(String username, String password) {
-        // Procura o utilizador pelo nome de utilizador usando o repository.
         Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
 
-        // Verifica se o utilizador foi encontrado e se a palavra-passe corresponde.
         if (usuarioOpt.isPresent() && usuarioOpt.get().getPassword().equals(password)) {
-            return usuarioOpt; // Retorna o utilizador se as credenciais estiverem corretas.
+            return usuarioOpt;
         }
 
-        return Optional.empty(); // Retorna vazio se o utilizador não existir ou a palavra-passe estiver errada.
+        return Optional.empty();
     }
 
     /**
@@ -52,7 +50,7 @@ public class UsuarioService {
      * @throws RuntimeException se o nome de utilizador já existir.
      */
     public Usuario registar(String username, String password, Usuario.Papel papel) {
-        // Regra de negócio: verifica se já existe um utilizador com este nome.
+        // Regra de negócio: impede o registo de um utilizador se o nome já estiver em uso.
         if (usuarioRepository.findByUsername(username).isPresent()) {
             throw new RuntimeException("O nome de utilizador '" + username + "' já está em uso.");
         }
@@ -64,6 +62,4 @@ public class UsuarioService {
 
         return usuarioRepository.save(novoUtilizador);
     }
-
-    // Outros métodos de serviço, como listar, remover ou atualizar utilizadores, podem ser adicionados aqui.
 }

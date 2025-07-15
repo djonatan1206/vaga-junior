@@ -9,27 +9,25 @@ import java.util.Optional;
 /**
  * Repository para a entidade Utilizador.
  *
- * Demonstração de "Query Methods":
- * O Spring Data JPA tem um poderoso mecanismo de criação de consultas a partir do nome do método.
- * Ao declarar um método como `findByUsername`, o Spring entende que deve gerar uma consulta
- * que procura na tabela 'usuario' por uma linha onde a coluna 'username' corresponda ao
- * parâmetro fornecido.
+ * Demonstração de "Query Methods" e Boas Práticas:
+ * 1.  **Query Methods:** O Spring Data JPA cria consultas a partir do nome do método. `findByUsername`
+ * gera uma consulta `WHERE username = ?`, eliminando a necessidade de escrever a query manualmente.
  *
- * Uso de `Optional<T>`:
- * Em vez de retornar o objeto diretamente ou `null` (como fazíamos no DAO), é uma boa prática
- * moderna retornar um `Optional<Usuario>`. O Optional é um "contentor" que pode ou não
- * conter um valor. Isto força quem chama o método a lidar explicitamente com o caso em que
- * o utilizador não é encontrado, evitando os temidos `NullPointerException`.
+ * 2.  **Uso de `Optional<T>`:** Em vez de retornar o objeto diretamente ou `null` (o que pode levar
+ * a `NullPointerException`), o método retorna um `Optional<Usuario>`. O Optional é um
+ * "contentor" que pode ou não conter um valor. Esta é uma prática moderna de programação
+ * em Java que força quem chama o método a lidar explicitamente com o caso em que o
+ * utilizador não é encontrado, resultando num código mais seguro e robusto.
  */
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     /**
-     * Procura um utilizador pelo seu nome de utilizador (username).
+     * Procura um utilizador pelo seu nome de utilizador (username), que é uma coluna única.
      * Este método é a base para o nosso sistema de autenticação.
      *
      * @param username O nome de utilizador a ser procurado.
-     * @return um Optional contendo o Utilizador se encontrado, ou um Optional vazio caso contrário.
+     * @return um `Optional` contendo o Utilizador se encontrado, ou um `Optional` vazio caso contrário.
      */
     Optional<Usuario> findByUsername(String username);
 }

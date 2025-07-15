@@ -6,29 +6,22 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Repository para a entidade Combustivel.
- * Esta interface utiliza o poder do Spring Data JPA para abstrair completamente o acesso a dados.
+ * Esta interface é um exemplo claro da produtividade ganha com o Spring Data JPA.
  *
  * Conceitos Chave:
- * - @Repository: Anotação que marca esta interface como um componente Spring do tipo Repository.
- * Isto permite que o Spring a detete (component scanning) e a injete em outras classes
- * (como os nossos futuros Services e Controllers) usando @Autowired.
+ * - @Repository: Anotação que marca esta interface como um componente Spring, permitindo a injeção de dependência.
  *
- * - extends JpaRepository<Combustivel, Integer>: Este é o núcleo da "magia" do Spring Data JPA.
- * - Ao herdar de JpaRepository, a nossa interface `CombustivelRepository` ganha, sem necessidade de
- * implementação, um conjunto completo de métodos CRUD (Create, Read, Update, Delete).
- * - Métodos como `save()`, `findById()`, `findAll()`, `deleteById()` e muitos outros já estão
- * disponíveis para uso imediato.
- * - Os parâmetros genéricos `<Combustivel, Integer>` dizem ao Spring que este repository
- * gere a entidade `Combustivel`, e que o tipo da sua chave primária (`@Id`) é `Integer`.
+ * - extends JpaRepository<Combustivel, Integer>: Este é o núcleo da abstração.
+ * - O primeiro parâmetro genérico, `Combustivel`, indica a entidade que este repository gere.
+ * - O segundo, `Integer`, especifica o tipo da chave primária (@Id) dessa entidade.
  *
  * Vantagens desta abordagem sobre o DAO manual:
- * - Redução Drástica de Código: Eliminamos centenas de linhas de código JDBC repetitivo.
- * - Segurança e Otimização: O Spring Data JPA gera implementações otimizadas e seguras.
+ * - Redução Drástica de Código: Centenas de linhas de código JDBC repetitivo são eliminadas.
+ * - Segurança e Otimização: O Spring Data JPA gera implementações otimizadas e seguras,
+ * prevenindo ataques comuns como SQL Injection.
  * - Produtividade: O desenvolvimento da camada de dados torna-se quase instantâneo.
  */
 @Repository
 public interface CombustivelRepository extends JpaRepository<Combustivel, Integer> {
-    // Não é necessário escrever nenhum método aqui por enquanto.
-    // O Spring Data JPA já nos fornece todo o CRUD básico.
+    // Não é necessário escrever nenhum método aqui para as operações básicas de CRUD.
 }
-

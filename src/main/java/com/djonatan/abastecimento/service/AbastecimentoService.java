@@ -14,23 +14,22 @@ import java.util.List;
 
 /**
  * Camada de Serviço para a entidade Abastecimento.
- * Esta classe contém a lógica de negócio principal relacionada aos abastecimentos.
+ * Esta classe é o coração da lógica de negócio principal da aplicação.
  *
  * Anotações Chave:
- * - @Service: Marca esta classe como um componente de serviço no contexto do Spring.
- * Isto permite que o Spring a detete e a injete onde for necessário.
- * - @Autowired: Utilizada para a Injeção de Dependência. O Spring irá automaticamente
- * fornecer as instâncias dos Repositories necessários para esta classe.
+ * - @Service: Marca esta classe como um componente de serviço no contexto do Spring,
+ * permitindo a injeção de dependência.
+ * - @Autowired: Realiza a injeção de dependência dos Repositories, desacoplando o serviço
+ * da implementação do acesso a dados.
  *
  * Responsabilidades:
- * - Mediar a comunicação entre a camada de Controller e a camada de Repository.
- * - Encapsular regras de negócio complexas, como o cálculo de valores e litros.
- * - Garantir a integridade e a consistência dos dados antes da persistência.
+ * - Mediar a comunicação entre a camada de Controller e a de Repository.
+ * - Encapsular regras de negócio complexas, como o cálculo de valor a partir dos litros e vice-versa.
+ * - Garantir a integridade dos dados antes da persistência (ex: verificar se a bomba existe).
  */
 @Service
 public class AbastecimentoService {
 
-    // Injeção de dependência dos repositories necessários.
     @Autowired
     private AbastecimentoRepository abastecimentoRepository;
 
@@ -38,11 +37,10 @@ public class AbastecimentoService {
     private BombaRepository bombaRepository;
 
     /**
-     * Lista todos os abastecimentos registados, ordenados do mais recente para o mais antigo.
+     * Retorna uma lista de todos os abastecimentos, ordenados do mais recente para o mais antigo.
      * @return Uma lista de objetos Abastecimento.
      */
     public List<Abastecimento> listarTodos() {
-        // Usa o método personalizado do repository para obter os dados já ordenados.
         return abastecimentoRepository.findAllByOrderByIdDesc();
     }
 
@@ -55,22 +53,18 @@ public class AbastecimentoService {
      * @return O objeto Abastecimento que foi criado e salvo.
      */
     public Abastecimento registarPorLitros(int bombaId, BigDecimal litros) {
-        // Busca a bomba no banco de dados para garantir que ela existe.
         Bomba bomba = bombaRepository.findById(bombaId)
                 .orElseThrow(() -> new RuntimeException("Bomba não encontrada com o ID: " + bombaId));
 
-        // Calcula o valor total
         BigDecimal precoPorLitro = bomba.getCombustivel().getPrecoPorLitro();
         BigDecimal valorTotal = litros.multiply(precoPorLitro).setScale(2, RoundingMode.HALF_UP);
 
-        // Cria a nova entidade Abastecimento
         Abastecimento novoAbastecimento = new Abastecimento();
         novoAbastecimento.setBomba(bomba);
         novoAbastecimento.setLitros(litros);
         novoAbastecimento.setValorTotal(valorTotal);
         novoAbastecimento.setData(LocalDateTime.now());
 
-        // Salva a entidade no banco de dados usando o repository.
         return abastecimentoRepository.save(novoAbastecimento);
     }
 
@@ -86,14 +80,12 @@ public class AbastecimentoService {
         Bomba bomba = bombaRepository.findById(bombaId)
                 .orElseThrow(() -> new RuntimeException("Bomba não encontrada com o ID: " + bombaId));
 
-        // Calcula os litros
         BigDecimal precoPorLitro = bomba.getCombustivel().getPrecoPorLitro();
         if (precoPorLitro.compareTo(BigDecimal.ZERO) <= 0) {
             throw new RuntimeException("Preço do combustível inválido para cálculo.");
         }
         BigDecimal litros = valorTotal.divide(precoPorLitro, 3, RoundingMode.HALF_UP);
 
-        // Cria a nova entidade Abastecimento
         Abastecimento novoAbastecimento = new Abastecimento();
         novoAbastecimento.setBomba(bomba);
         novoAbastecimento.setLitros(litros);
@@ -103,8 +95,12 @@ public class AbastecimentoService {
         return abastecimentoRepository.save(novoAbastecimento);
     }
 
-    // Métodos para atualizar e remover podem ser adicionados aqui,
-    // incluindo a lógica de verificação de permissão do utilizador.
+    /**
+     * Remove um abastecimento do sistema.
+     * A lógica de verificação de permissões (se o utilizador é admin) é tratada na camada de Controller,
+     * que decide se deve ou não chamar este método.
+     * @param id O ID do abastecimento a ser removido.
+     */
     public void remover(int id) {
         abastecimentoRepository.deleteById(id);
     }

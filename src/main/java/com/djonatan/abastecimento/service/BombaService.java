@@ -24,7 +24,6 @@ public class BombaService {
     @Autowired
     private BombaRepository bombaRepository;
 
-    // Injetamos também o CombustivelRepository para validar a existência do combustível.
     @Autowired
     private CombustivelRepository combustivelRepository;
 
@@ -50,17 +49,13 @@ public class BombaService {
      * @throws RuntimeException se o combustível associado não for encontrado.
      */
     public Bomba salvar(Bomba bomba) {
-        // Extrai o ID do combustível do objeto bomba recebido.
         int combustivelId = bomba.getCombustivel().getId();
 
-        // Procura o combustível no banco de dados para garantir que ele existe.
         Combustivel combustivel = combustivelRepository.findById(combustivelId)
                 .orElseThrow(() -> new RuntimeException("Combustível não encontrado com o ID: " + combustivelId));
 
-        // Associa a entidade Combustivel completa (e não apenas o ID) ao objeto Bomba.
         bomba.setCombustivel(combustivel);
 
-        // Salva a bomba, agora com a referência de combustível validada e completa.
         return bombaRepository.save(bomba);
     }
 
@@ -70,7 +65,7 @@ public class BombaService {
      */
     public void remover(Integer id) {
         // A lógica de verificação de dependências (se a bomba tem abastecimentos)
-        // será tratada pelo Controller através da captura de exceções.
+        // é tratada na camada de Controller através da captura de exceções.
         bombaRepository.deleteById(id);
     }
 }
