@@ -381,46 +381,6 @@ tail -f logs/application.log
 grep ERROR logs/application.log
 ```
 
-## 🤝 Contribuindo
-
-Contribuições são sempre bem-vindas! Siga os passos abaixo:
-
-1. **Fork o projeto**
-2. **Crie uma branch para sua feature**
-   ```bash
-   git checkout -b feature/nova-funcionalidade
-   ```
-3. **Commit suas mudanças**
-   ```bash
-   git commit -m "Adiciona nova funcionalidade"
-   ```
-4. **Push para a branch**
-   ```bash
-   git push origin feature/nova-funcionalidade
-   ```
-5. **Abra um Pull Request**
-
-### Padrões de Código
-
-- Use **Java Code Style** padrão
-- Documente métodos públicos com **JavaDoc**
-- Escreva **testes unitários** para novas funcionalidades
-- Siga os princípios **SOLID**
-
-### Reportando Bugs
-
-Ao reportar bugs, inclua:
-- Versão do Java e Spring Boot
-- Passos para reproduzir o problema
-- Logs de erro relevantes
-- Comportamento esperado vs atual
-
----
-
-## 📄 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
-
 ## 👨‍💻 Desenvolvedor
 
 Desenvolvido por Djonatan Antunes.
